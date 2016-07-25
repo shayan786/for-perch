@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
   include ReactOnRails::Controller
-  before_action :set_comments
+  before_action :set_products
 
   def index
     # NOTE: The below notes apply if you want to set the value of the props in the controller, as
@@ -22,13 +22,18 @@ class PagesController < ApplicationController
     #   format.html
     # end
 
-    redux_store("routerCommentsStore", props: comments_json_string)
+    redux_store("routerProductsStore", props: products_json_string)
+    render_html
+  end
+
+  def cart
+    redux_store("routerProductsStore", props: products_json_string)
     render_html
   end
 
   # Declaring no_router and simple to indicate we have views for them
   def no_router
-    redux_store("commentsStore", props: comments_json_string)
+    redux_store("productsStore", props: products_json_string)
     render_html
   end
 
@@ -37,13 +42,13 @@ class PagesController < ApplicationController
 
   private
 
-  def set_comments
-    @comments = Comment.all.order("id DESC")
+  def set_products
+    @products = Product.all.order("id DESC")
   end
 
-  def comments_json_string
-    render_to_string(template: "/comments/index.json.jbuilder",
-                     locals: { comments: Comment.all }, format: :json)
+  def products_json_string
+    render_to_string(template: "/products/index.json.jbuilder",
+                     locals: { comments: Product.all }, format: :json)
   end
 
   def render_html
