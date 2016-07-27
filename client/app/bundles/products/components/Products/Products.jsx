@@ -7,9 +7,8 @@ import css from './Products.scss';
 export default class Products extends BaseComponent {
 
   static propTypes = {
-    actions: PropTypes.object.isRequired,
-    data: PropTypes.object.isRequired,
-    locationState: PropTypes.object,
+    products: PropTypes.object.isRequired,
+    cart: PropTypes.object.isRequired
   };
 
   _renderProducts($$products) {
@@ -18,18 +17,25 @@ export default class Products extends BaseComponent {
         <Product 
           key={$$product.get('id')}
           product={$$product}
-          handleAddToCartClick={this.props.actions.addProductToCart}
+          handleAddToCartClick={this.props.cartsActions.addProductToCart}
         />
       )
     )
   }
 
+  componentDidMount () {
+    const { cart } = this.props;
+
+    if (!cart.get('cartId'))
+      this.props.cartsActions.fetchNewCart();
+  }
+
   render() {
-    const { data, actions } = this.props;
+    const { products } = this.props;
 
     return (
       <div className={css.products}>
-        {this._renderProducts(data.get('$$products'))}
+        {this._renderProducts(products.get('$$products'))}
       </div>
     );
   }

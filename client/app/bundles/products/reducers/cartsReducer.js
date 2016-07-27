@@ -2,18 +2,17 @@
 
 import Immutable from 'immutable';
 
-import * as actionTypes from '../constants/productsConstants';
+import * as actionTypes from '../constants/cartsConstants';
 
 export const $$initialState = Immutable.fromJS({
   $$products: [],
-  fetchProductError: null,
-  submitProductError: null,
+  cartId: null,
   isFetching: false,
-  isSaving: false,
+  isSaving: false
 });
 
-export default function productsReducer($$state = $$initialState, action = null) {
-  const { type, product, products, cartId, error } = action;
+export default function cartsReducer($$state = $$initialState, action = null) {
+  const { type, product, products, cartId, error, index } = action;
 
   switch (type) {
 
@@ -32,25 +31,31 @@ export default function productsReducer($$state = $$initialState, action = null)
       });
     }
 
-    case actionTypes.SUBMIT_PRODUCT_SUCCESS: {
+    // SHOULD HAVE FAIL & SUCCESS...
+    case actionTypes.CREATE_NEW_CART: {
+      return $$state.merge({
+        cartId
+      });
+    }
+
+    case actionTypes.ADD_PRODUCT_TO_CART: {
       return $$state.withMutations(state => (
         state
           .updateIn(
             ['$$products'],
             $$products => $$products.unshift(Immutable.fromJS(product))
           )
-          .merge({
-            submitProductError: null,
-            isSaving: false,
-          })
       ));
     }
 
-    case actionTypes.SUBMIT_PRODUCT_FAILURE: {
-      return $$state.merge({
-        submitProductError: error,
-        isSaving: false,
-      });
+    case actionTypes.REMOVE_PRODUCT_FROM_CART: {
+      return $$state.withMutations(state => (
+        state
+          .updateIn(
+            ['$$products'],
+            $$products => $$products.delete(index)
+          )
+      ));
     }
 
     case actionTypes.SET_IS_FETCHING: {

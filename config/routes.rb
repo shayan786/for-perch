@@ -14,5 +14,6 @@ Rails.application.routes.draw do
   # React Router needs a wildcard
   get "react-router(/*all)", to: "pages#index"
 
+  resources :carts
   resources :products
 end

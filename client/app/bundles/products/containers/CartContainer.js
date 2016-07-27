@@ -2,15 +2,14 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Products from '../components/Products/Products.jsx';
-import * as productsActionCreators from '../actions/productsActionCreators';
+import * as cartsActionCreators from '../actions/cartsActionCreators';
 import BaseComponent from 'libs/components/BaseComponent';
 import Button from 'react-bootstrap/lib/Button';
 import css from './Cart.scss';
 
 function select(state) {
   // Which part of the Redux global state does our component want to receive as props?
-  return { data: state.$$productsStore };
+  return { data: state.$$cartsStore };
 }
 
 class CartContainer extends BaseComponent {
@@ -34,6 +33,10 @@ class CartContainer extends BaseComponent {
         <div className={css.price}>
           {`$ ${$$product.get('price').toFixed(2)}`}
         </div>
+        <Button
+          onClick={() => actions.removeProductFromCart($$product, i)}>
+          Remove
+        </Button>
       </div>
     );
   }
@@ -42,7 +45,7 @@ class CartContainer extends BaseComponent {
     let subtotal = 0;
 
     $$products.map(($$product) => {
-      subtotal += $$product.get('price')
+      subtotal += $$product.get('price');
     });
 
     const TAX_RATE = 0.0865;
@@ -80,25 +83,31 @@ class CartContainer extends BaseComponent {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   render() {
     const { data, dispatch } = this.props;
-    const actions = bindActionCreators(productsActionCreators, dispatch);
+    const actions = bindActionCreators(cartsActionCreators, dispatch);
 
     const cartItems = 
-      data.get('$$cart').map(($$product, i) => 
+      data.get('$$products').map(($$product, i) => 
         this._renderProductRow($$product, i, actions)
       );
-    const cartSummary = this._renderCartSummary(data.get('$$cart'));
+    const cartSummary = this._renderCartSummary(data.get('$$products'));
 
-    return (
-      <div className={css.cart}>
-        {cartItems}
-        {cartSummary}
-      </div>
-    );
+    return data.get('$$products').size > 0
+    ? (
+        <div className={css.cart}>
+          {cartItems}
+          {cartSummary}
+        </div>
+      )
+    : (
+        <div className={css.cart}>
+          <h1> Cart is Empty </h1>
+        </div>
+      )
   }
 }
 

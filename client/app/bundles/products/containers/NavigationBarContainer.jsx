@@ -8,9 +8,9 @@ import BaseComponent from 'libs/components/BaseComponent';
 
 function stateToProps(state) {
   // Which part of the Redux global state does our component want to receive as props?
-  if (state.$$productsStore) {
+  if (state.$$cartsStore) {
     return {
-      cartCount: state.$$productsStore.get('$$cart').size,
+      cartCount: state.$$cartsStore.get('$$products').size,
       pathname: state.railsContext.pathname,
     };
   } else {

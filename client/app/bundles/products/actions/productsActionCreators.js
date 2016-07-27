@@ -17,6 +17,7 @@ export function fetchProductsSuccess(data) {
   return {
     type: actionTypes.FETCH_PRODUCTS_SUCCESS,
     products: data.products,
+    cartId: data.cartId
   };
 }
 
@@ -25,20 +26,6 @@ export function fetchProductsFailure(error) {
     type: actionTypes.FETCH_PRODUCTS_FAILURE,
     error,
   };
-}
-
-export function addProductToCart(product) {
-  return {
-    type: actionTypes.ADD_PRODUCT_TO_CART,
-    product
-  }
-}
-
-export function removeProductFromCart(product) {
-  return {
-    type: actionTypes.REMOVE_PRODUCT_FROM_CART,
-    product
-  }
 }
 
 export function submitProductSuccess(product) {

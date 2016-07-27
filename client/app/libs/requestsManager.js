@@ -1,7 +1,15 @@
 import request from 'axios';
 import metaTagsManager from './metaTagsManager';
 
-const API_URL = 'products.json';
+const PRODUCTS_API_URL = {
+  fetch: 'products.json',
+  create: '/products',
+  delete: '/products'
+};
+
+const CART_API_URL = {
+  create: '/carts'
+};
 
 export default {
 
@@ -13,7 +21,7 @@ export default {
   fetchEntities() {
     return request({
       method: 'GET',
-      url: API_URL,
+      url: PRODUCTS_API_URL.fetch,
       responseType: 'json',
     });
   },
@@ -27,7 +35,7 @@ export default {
   submitEntity(entity) {
     return request({
       method: 'POST',
-      url: API_URL,
+      url: PRODUCTS_API_URL.fetch,
       responseType: 'json',
       headers: {
         'X-CSRF-Token': metaTagsManager.getCSRFToken(),
@@ -35,5 +43,39 @@ export default {
       data: entity,
     });
   },
+
+  createNewCart() {
+    return request({
+      method: 'POST',
+      url: CART_API_URL.create,
+      responseType: 'json',
+      headers: {
+        'X-CSRF-Token': metaTagsManager.getCSRFToken(),
+      }
+    });
+  },
+
+  addProductToCart(productId, cartId) {
+    return request({
+      method: 'POST',
+      url: PRODUCTS_API_URL.create,
+      responseType: 'json',
+      headers: {
+        'X-CSRF-Token': metaTagsManager.getCSRFToken(),
+      },
+      data: {productId, cartId},
+    });
+  },
+
+  removeProductFromCart(productId) {
+    return request({
+      method: 'DELETE',
+      url: `${PRODUCTS_API_URL.delete}/${productId}`,
+      responseType: 'json',
+      headers: {
+        'X-CSRF-Token': metaTagsManager.getCSRFToken(),
+      }
+    })
+  }
 
 };

@@ -21,7 +21,7 @@ class PagesController < ApplicationController
     # respond_to do |format|
     #   format.html
     # end
-
+    
     redux_store("routerProductsStore", props: products_json_string)
     render_html
   end
@@ -43,12 +43,12 @@ class PagesController < ApplicationController
   private
 
   def set_products
-    @products = Product.all.order("id DESC")
+    @products = Product.where(cart_id: nil).order("id DESC")
   end
 
   def products_json_string
     render_to_string(template: "/products/index.json.jbuilder",
-                     locals: { comments: Product.all }, format: :json)
+                     locals: { products: Product.where(cart_id: nil) }, format: :json)
   end
 
   def render_html

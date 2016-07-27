@@ -7,4 +7,6 @@ rake db:migrate
 rake db:seed
 
 foreman start -f Procfile.hot
+
+localhost:5000
 ```
